@@ -13,6 +13,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Connect to database
+connectToDatabase();
+
 // Routes
 app.get("/", (req: Request, res: Response) => {
   req;
