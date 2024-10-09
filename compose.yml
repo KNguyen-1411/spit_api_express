@@ -1,0 +1,63 @@
+services:
+  spit_api_app_database:
+    image: mysql:latest
+    container_name: spit_api_app_database
+    environment:
+      MYSQL_ROOT_PASSWORD: 123  
+      MYSQL_DATABASE: mydatabase  
+    volumes:
+      - ./database:/var/lib/mysql
+    ports:
+      - 3303:3306
+    networks:
+      spit_api_app_network:
+        ipv4_address: 192.29.5.3
+
+  spit_api_app_server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: development
+    image: spit_api_app_server
+    container_name: spit_api_app_server
+    volumes:
+      - ./server/:/usr/server/
+      - spit_api_app_server_node_modules:/usr/server/node_modules
+    depends_on:
+      - spit_api_app_database
+    ports: 
+      - 3302:3000
+    networks:
+      spit_api_app_network:
+        ipv4_address: 192.29.5.4  
+
+  # spit_api_app_client:
+  #   build: 
+  #     context: ./client
+  #     dockerfile: Dockerfile
+  #     target: dev
+  #   image: spit_api_app_client
+  #   container_name: spit_api_app_client
+  #   command: yarn dev
+  #   volumes:
+  #     - ./client/:/app
+  #     - spit_api_app_client_node_modules:/app/node_modules
+  #   ports: 
+  #     - 3301:3000
+  #   networks:
+  #     spit_api_app_network:
+  #       ipv4_address: 192.29.5.5  
+
+volumes:
+  spit_api_app_server_node_modules:
+  # spit_api_app_client_node_modules:
+  spit_api_app_database_data:  
+
+networks:
+  spit_api_app_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.29.0.0/16  
+          ip_range: 192.29.5.0/24  
+          gateway: 192.29.5.254
