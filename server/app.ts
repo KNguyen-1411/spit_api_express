@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import "dotenv/config";
 import connectToDatabase from "./config/connectDB";
+import router from "./src/routes";
 
 // Create express app
 const app = express();
@@ -15,6 +16,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connect to database
 connectToDatabase();
+
+// Routes
+app.use("/api/v1", router);
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
