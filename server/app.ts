@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import "dotenv/config";
 import connectToDatabase from "./config/connectDB";
+import router from "./src/routes";
 
 // Create express app
 const app = express();
@@ -12,6 +13,12 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Connect to database
+connectToDatabase();
+
+// Routes
+app.use("/api/v1", router);
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
