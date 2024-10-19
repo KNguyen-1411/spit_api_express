@@ -30,7 +30,7 @@ app.use("/api/v1", router);
 // Routes
 app.get("/", (req: Request, res: Response) => {
   req;
-  res.send("<div style='text-align:center;margin-top:40vh;'><h1>Hello World</h1></div>");
+  res.send("<div style='text-align:center;margin-top:40vh;'><h1>Hello World</h1> <h2>API-docs: /api-docs/</h2></div>");
 });
 // Start server
 app.listen(PORT, () => {
