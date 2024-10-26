@@ -60,6 +60,34 @@ router.post("/login", UserControllers.index);
 
 /**
  * @swagger
+ * /api/v1/user/refreshToken:
+ *   post:
+ *     summary: Làm mới mã truy cập
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 example: none
+ *     responses:
+ *       200:
+ *         description: Làm mới thành công
+ *       401:
+ *         description: Mã làm mới sai hoặc không hợp lệ
+ *       404:
+ *         description: Mã làm mới không hợp lệ
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+router.post("/refreshToken", UserControllers.refreshToken);
+
+/**
+ * @swagger
  * /api/v1/user/:
  *   get:
  *     summary: Lấy thông tin người dùng
