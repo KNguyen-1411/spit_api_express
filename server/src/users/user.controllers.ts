@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User from "./user.module";
 import message from "./user.mesage";
-import { generateAT } from "../../config/jwt";
+import { generateAT, generateRT, verifyRT } from "../../config/jwt";
 class UserControllers {
   async index(req: Request, res: Response): Promise<void> {
     const { userName, password } = req.body;
@@ -15,10 +15,12 @@ class UserControllers {
         return;
       }
       const accessToken = generateAT({ userName });
+      const refreshToken = generateRT({ userName });
       res.status(200).json({
         data: {
           userName: user.userName,
           accessToken: accessToken,
+          refreshToken: refreshToken,
         },
         message: message.LOGIN_SUCCESS,
       });
@@ -49,6 +51,31 @@ class UserControllers {
       });
       return;
     }
+  }
+  async refreshToken(req: Request, res: Response): Promise<void> {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      res.status(401).json({
+        data: "Không có mã làm mới!",
+        message: message.TOKEN_REQUIRED,
+      });
+      return;
+    }
+    const payload = verifyRT(refreshToken);
+    if (!payload) {
+      res.status(401).json({
+        data: "Mã làm mới không hợp lệ!",
+        message: message.REFRESH_TOKEN,
+      });
+      return;
+    }
+    const newAccessToken = generateAT({ userName: payload.userName });
+    res.status(200).json({
+      data: {
+        accessToken: newAccessToken,
+      },
+      message: message.TOKEN_SUCCESS,
+    });
   }
 }
 
